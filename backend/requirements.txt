@@ -9,3 +9,4 @@ djoser==2.1.0
 pytz==2021.1
 pillow
 drf-extra-fields
+python-dotenv==0.18.0

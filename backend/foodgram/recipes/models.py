@@ -1,4 +1,5 @@
 from django.db import models
+
 from ingredients.models import Ingredient
 from tags.models import Tag
 from users.models import CustomUser
@@ -8,13 +9,14 @@ User = CustomUser
 
 class Recipe(models.Model):
     name = models.CharField(max_length=255)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='recipes')
     image = models.ImageField(upload_to='recipes/')
     text = models.TextField(max_length=1255)
     cooking_time = models.IntegerField()
     ingredient = models.ManyToManyField(
         Ingredient, through='IngredientsInRecipe')
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, related_name='recipes')
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
@@ -25,8 +27,10 @@ class Recipe(models.Model):
 
 
 class IngredientsInRecipe(models.Model):
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(
+        Ingredient, on_delete=models.CASCADE, related_name='amounts')
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name='amounts')
     amount = models.PositiveIntegerField()
 
     class Meta:
@@ -40,9 +44,10 @@ class IngredientsInRecipe(models.Model):
 
 
 class Favorites(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    date_add = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,  related_name='favorites_user')
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE,  related_name='favorite_recipe')
 
     class Meta:
         constraints = [
@@ -59,11 +64,10 @@ class Favorites(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='carts')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    date_add = models.DateTimeField(auto_now_add=True)
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name='carts')
 
     class Meta:
-        ordering = ('-date_add',)
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'], name='purchase_user_recipe_unique'

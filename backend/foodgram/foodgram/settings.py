@@ -1,8 +1,14 @@
 import os
 
+from dotenv import load_dotenv
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'ne-&g6oo_#0kyn5_c0$-sn8)dnve9u3$c9d7+!lld6dz55av36'
+load_dotenv('.env')
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+# SECRET_KEY = 'ne-&g6oo_#0kyn5_c0$-sn8)dnve9u3$c9d7+!lld6dz55av36'
 
 DEBUG = True
 
@@ -83,10 +89,19 @@ DJOSER = {
 }
 
 DATABASES = {
+    # Можно же пока не убирать совсем?
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': os.environ.get('DB_ENGINE'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+    },
 }
 
 

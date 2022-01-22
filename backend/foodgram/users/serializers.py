@@ -1,10 +1,17 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
+from recipes.models import Recipe
 
 from .models import Follow
 
 User = get_user_model()
+
+
+class RepresentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class UserFollowSerializer(serializers.ModelSerializer):
@@ -55,10 +62,9 @@ class FollowListSerializer(serializers.ModelSerializer):
         )
 
     def get_recipes(self, obj):
-        from recipes.serializers import RecipeImageSerializer
         recipes = obj.recipes.all()[:3]
         request = self.context.get('request')
-        return RecipeImageSerializer(
+        return RepresentationSerializer(
             recipes, many=True,
             context={'request': request}
         ).data

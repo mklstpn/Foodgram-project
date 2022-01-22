@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import UniqueConstraint
 
 
 class CustomUser(AbstractUser):
@@ -25,7 +24,10 @@ class Follow(models.Model):
         User, on_delete=models.CASCADE, related_name='follower')
 
     class Meta:
-        UniqueConstraint(fields=['user', 'following'], name='follow_unique')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'following'], name='follow_unique')
+        ]
 
     def __str__(self):
         return f"{self.user} follows {self.following}"
