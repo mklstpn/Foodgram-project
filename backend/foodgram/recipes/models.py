@@ -1,5 +1,4 @@
 from django.db import models
-
 from ingredients.models import Ingredient
 from tags.models import Tag
 from users.models import CustomUser
@@ -21,6 +20,8 @@ class Recipe(models.Model):
 
     class Meta:
         ordering = ('-pub_date',)
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
 
     def __str__(self):
         return self.name
