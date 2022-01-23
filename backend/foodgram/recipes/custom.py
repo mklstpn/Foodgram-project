@@ -4,14 +4,13 @@ from recipes.models import IngredientsInRecipe, Recipe
 from tags.models import Tag
 
 
-def tagsonly(self, obj):
+def add_tags(self, obj):
     tags = self.initial_data.get('tags')
     for tag_id in tags:
         obj.tags.add(get_object_or_404(Tag, pk=tag_id))
 
 
-def customsave(obj, validated_data):
-    ingredients = validated_data.pop('ingredient')
+def add_ingredients(obj, ingredients):
     for ingredient in ingredients:
         IngredientsInRecipe.objects.create(
             recipe=obj,

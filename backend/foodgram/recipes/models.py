@@ -1,4 +1,5 @@
 from django.db import models
+
 from ingredients.models import Ingredient
 from tags.models import Tag
 from users.models import CustomUser
@@ -7,16 +8,20 @@ User = CustomUser
 
 
 class Recipe(models.Model):
-    name = models.CharField(max_length=255)
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='recipes')
-    image = models.ImageField(upload_to='recipes/')
-    text = models.TextField(max_length=1255)
-    cooking_time = models.IntegerField()
+    name = models.CharField(max_length=255, verbose_name='Название рецепта')
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name='recipes', verbose_name='Автор')
+    image = models.ImageField(upload_to='recipes/',
+                              verbose_name='Фото рецепта')
+    text = models.TextField(max_length=1255, verbose_name='Текстовое описание')
+    cooking_time = models.PositiveIntegerField(
+        verbose_name='Время приготовления')
     ingredient = models.ManyToManyField(
-        Ingredient, through='IngredientsInRecipe')
-    tags = models.ManyToManyField(Tag, related_name='recipes')
-    pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
+        Ingredient, through='IngredientsInRecipe', verbose_name='Ингридиенты')
+    tags = models.ManyToManyField(
+        Tag, related_name='recipes', verbose_name='Тэги')
+    pub_date = models.DateTimeField(
+        auto_now_add=True, db_index=True, verbose_name='Дата публикации')
 
     class Meta:
         ordering = ('-pub_date',)
@@ -29,12 +34,16 @@ class Recipe(models.Model):
 
 class IngredientsInRecipe(models.Model):
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE, related_name='amounts')
+        Ingredient, on_delete=models.CASCADE,
+        related_name='amounts', verbose_name='Ингредиент')
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, related_name='amounts')
-    amount = models.PositiveIntegerField()
+        Recipe, on_delete=models.CASCADE,
+        related_name='amounts', verbose_name='Рецепт')
+    amount = models.PositiveIntegerField(verbose_name='Количество ингредиента')
 
     class Meta:
+        verbose_name = 'Ингредиенты в рецепте'
+        verbose_name_plural = 'Ингредиенты в рецептах'
         unique_together = ('recipe', 'ingredient')
         constraints = [
             models.UniqueConstraint(
@@ -46,11 +55,15 @@ class IngredientsInRecipe(models.Model):
 
 class Favorites(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,  related_name='favorites_user')
+        User, on_delete=models.CASCADE, related_name='favorites',
+        verbose_name='Пользователь')
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE,  related_name='favorite_recipe')
+        Recipe, on_delete=models.CASCADE, related_name='favorites',
+        verbose_name='Рецепты в избранном')
 
     class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
@@ -64,11 +77,15 @@ class Favorites(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='carts')
+        User, on_delete=models.CASCADE, related_name='carts',
+        verbose_name='Пользователь')
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, related_name='carts')
+        Recipe, on_delete=models.CASCADE, related_name='carts',
+        verbose_name='Рецепты в корзине')
 
     class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзина'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'], name='purchase_user_recipe_unique'

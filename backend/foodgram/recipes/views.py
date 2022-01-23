@@ -28,8 +28,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=True, permission_classes=[IsAuthenticated],
             methods=['POST'])
     def favorite(self, request, pk=None):
-        serialtype = FavoritesSerializer
-        serializer = add_favorite_or_cart(self, request, pk, serialtype)
+        serial_type = FavoritesSerializer
+        serializer = add_favorite_or_cart(self, request, pk, serial_type)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -43,8 +43,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=True, permission_classes=[IsAuthenticated],
             methods=['POST'])
     def shopping_cart(self, request, pk=None):
-        serialtype = CartSerializer
-        serializer = add_favorite_or_cart(self, request, pk, serialtype)
+        serial_type = CartSerializer
+        serializer = add_favorite_or_cart(self, request, pk, serial_type)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -68,7 +68,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 f'{ingredient["total"]} '
                 f'{ingredient["ingredient__measurement_unit"]}\n')
 
-        cart = 'cart.txt'
+        cart = 'shopping-list.txt'
         response = HttpResponse(shopping_list, content_type='text/plain')
         response['Content-Disposition'] = (f'attachment;'
                                            f'filename={cart}')

@@ -7,5 +7,6 @@ urlpatterns = [
          name='subscriptions'),
     path('auth/', include('djoser.urls.authtoken')),
     path('', include('djoser.urls')),
-    path('users/<int:following_id>/subscribe/', FollowApiView.as_view()),
+    path('users/<int:following_id>/subscribe/',
+         FollowApiView.as_view(), name='subscribe'),
 ]

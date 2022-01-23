@@ -1,7 +1,6 @@
 import django_filters as filters
 
 from users.models import CustomUser
-
 from .models import Recipe
 
 
@@ -13,7 +12,7 @@ class RecipeFilter(filters.FilterSet):
         queryset=CustomUser.objects.all()
     )
     is_favorites = filters.BooleanFilter(
-        field_name='favorite_recipe',
+        field_name='favorites',
         method='get_is_favorited',
         label='Favorited'
     )
@@ -29,7 +28,7 @@ class RecipeFilter(filters.FilterSet):
 
     def get_is_favorited(self, queryset, name, value):
         if self.request.user.is_authenticated:
-            return queryset.filter(favorite_recipe__user=self.request.user)
+            return queryset.filter(favorites__user=self.request.user)
         return queryset
 
     def get_is_in_shopping_cart(self, queryset, name, value):
