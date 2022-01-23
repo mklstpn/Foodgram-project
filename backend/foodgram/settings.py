@@ -8,11 +8,9 @@ load_dotenv('.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECRET_KEY = 'ne-&g6oo_#0kyn5_c0$-sn8)dnve9u3$c9d7+!lld6dz55av36'
+DEBUG = False
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
@@ -87,22 +85,24 @@ DJOSER = {
         'token_destroy': ['rest_framework.permissions.IsAuthenticated'],
     }
 }
-
-DATABASES = {
-    # Можно же пока не убирать совсем?
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # },
-    'default': {
-        'ENGINE': os.environ.get('DB_ENGINE'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    },
-}
+if DEBUG is True:
+    DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            },
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+            'NAME': os.getenv('DB_NAME', default='postgres'),
+            'USER': os.getenv('POSTGRES_USER', default='postgres'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+            'HOST': os.getenv('DB_HOST', default='127.0.0.1'),
+            'PORT': os.getenv('DB_PORT', default='5432')
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
