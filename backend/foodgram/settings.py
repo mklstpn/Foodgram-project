@@ -85,7 +85,7 @@ DJOSER = {
         'token_destroy': ['rest_framework.permissions.IsAuthenticated'],
     }
 }
-if DEBUG is True:
+if DEBUG:
     DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
