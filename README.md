@@ -1,6 +1,6 @@
 # Дипломный проект курса - Foodgram
 
-![foodgram_workflow](https://github.com/mklstpn/foodgram_workflow/actions/workflows/foodgram_workflow.yml/badge.svg)
+![foodgram_workflow](https://github.com/mklstpn/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 ## Описание приложения
 
