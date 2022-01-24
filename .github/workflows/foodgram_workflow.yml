@@ -73,14 +73,14 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             sudo docker-compose up -d
-      - name: preparing data in container
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          script: |
-            sudo docker-compose exec backend python manage.py migrate
-            sudo docker-compose exec backend python manage.py loaddata dump.json
-            sudo docker-compose exec backend python manage.py collectstatic --no-input 
+      #- name: preparing data in container
+      #  uses: appleboy/ssh-action@master
+      #  with:
+      #    host: ${{ secrets.HOST }}
+      #    username: ${{ secrets.USER }}
+      #    key: ${{ secrets.SSH_KEY }}
+      #    passphrase: ${{ secrets.PASSPHRASE }}
+      #    script: |
+      #      sudo docker-compose exec backend python manage.py migrate
+      #      sudo docker-compose exec backend python manage.py loaddata dump.json
+      #      sudo docker-compose exec backend python manage.py collectstatic --no-input 
