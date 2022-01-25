@@ -11,7 +11,7 @@ class RecipeFilter(filters.FilterSet):
     author = filters.ModelChoiceFilter(
         queryset=CustomUser.objects.all()
     )
-    is_favorites = filters.BooleanFilter(
+    is_favorited = filters.BooleanFilter(
         field_name='favorites',
         method='get_is_favorited',
         label='Favorited'
@@ -24,7 +24,7 @@ class RecipeFilter(filters.FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['tags', 'author', 'is_favorites', 'is_in_shopping_cart']
+        fields = ['tags', 'author', 'is_favorited', 'is_in_shopping_cart']
 
     def get_is_favorited(self, queryset, name, value):
         if self.request.user.is_authenticated:
