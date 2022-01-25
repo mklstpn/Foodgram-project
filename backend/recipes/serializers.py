@@ -33,14 +33,21 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = ('tags', 'author', 'is_favorited', 'is_in_shopping_cart',
                   'name', 'image', 'text', 'cooking_time', 'id', 'ingredients')
 
-    def get_is_favorited(self, recipe):
-        return recipe.favorites.all().exists()
+    def get_is_favorited(self, obj):
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return Favorites.objects.filter(user=request.user, recipe=obj).exists()
 
-    def get_is_in_shopping_cart(self, recipe):
-        return recipe.carts.all().exists()
+    def get_is_in_shopping_cart(self, obj):
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return Cart.objects.filter(
+            user=request.user, recipe=obj).exists()
 
     def validate(self, data):
-        ingredients = self.data
+        ingredients = self.initial_data.get('ingredients')
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']

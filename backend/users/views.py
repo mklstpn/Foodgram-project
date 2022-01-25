@@ -45,11 +45,7 @@ class FollowListApiView(generics.ListAPIView):
 class FollowApiView(APIView):
     permission_classes = [IsAuthenticated, ]
 
-    @action(
-        detail=True,
-        methods=['post'],
-    )
-    def get(self, request, following_id):
+    def post(self, request, following_id):
         user = request.user
         data = {
             'following': following_id,
