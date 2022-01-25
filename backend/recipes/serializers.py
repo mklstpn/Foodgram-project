@@ -40,7 +40,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe.carts.all().exists()
 
     def validate(self, data):
-        ingredients = self.data.get('ingredients')
+        ingredients = self.data
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
