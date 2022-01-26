@@ -47,7 +47,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             user=request.user, recipe=obj).exists()
 
     def validate(self, data):
-        ingredients = self.initial_data.get('ingredients')
+        ingredients = data
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
@@ -72,7 +72,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image = validated_data.pop('image')
-        print(validated_data)
         ingredients = validated_data.pop('ingredient')
         recipe = Recipe.objects.create(image=image, **validated_data)
         add_tags(self, recipe)

@@ -63,7 +63,7 @@ jobs:
           script: |
             sudo docker-compose stop
             sudo docker-compose rm -f backend
-            docker image rm slake6/backend
+            sudo docker image rm slake6/backend
             touch .env
             echo '' > .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
