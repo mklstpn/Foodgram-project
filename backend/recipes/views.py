@@ -3,15 +3,33 @@ from django.http.response import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from .custom import add_favorite_or_cart, delete_favorite_or_cart
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientSearchFilter
 from .models import Cart, Favorites, IngredientsInRecipe, Recipe
 from .pagination import CustomPagination
 from .permissions import IsOwnerOrAdminOrReadOnly
 from .serializers import CartSerializer, FavoritesSerializer, RecipeSerializer
+from tags.models import Tag
+from tags.serializers import TagSerializer
+from ingredients.models import Ingredient
+from ingredients.serializers import Ingredientserializer
+
+
+class TagsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Tag.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = TagSerializer
+
+
+class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Ingredient.objects.all()
+    permission_classes = (AllowAny, )
+    serializer_class = Ingredientserializer
+    filter_backends = [IngredientSearchFilter]
+    search_fields = ('^name',)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
