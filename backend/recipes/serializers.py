@@ -61,8 +61,20 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'amount': 'Количество не может быть меньше нуля'
                 })
+        tags = data
+        if not tags:
+            raise serializers.ValidationError({
+                'tags': 'Не выбран ни один тэг'
+            })
+        tags_list = []
+        for tag in tags:
+            if tag in tags_list:
+                raise serializers.ValidationError({
+                    'tags': 'Нельзя добавить тэг 2 раза'
+                })
+            tags_list.append(tag)
 
-        cooking_time = self.initial_data.get('cooking_time')
+        cooking_time = data.get('cooking_time')
         if int(cooking_time) <= 0:
             raise serializers.ValidationError({
                 'cooking_time': 'Время не может быть меньше нуля'

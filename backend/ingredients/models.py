@@ -8,7 +8,6 @@ class Ingredient(models.Model):
         max_length=255, verbose_name='Единицы измерения')
 
     class Meta:
-        ordering = ('name', )
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
