@@ -12,6 +12,8 @@
 
 #### Проект доступен на http://51.250.1.69
 
+#### Панель администратора доступна по http://51.250.1.69/admin; : ololo@ololo.ru ololo
+
 ## Пример заполнения .env файла
 ```
 DB_ENGINE=django.db.backends.postgresql
