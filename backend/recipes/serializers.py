@@ -47,7 +47,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             user=request.user, recipe=obj).exists()
 
     def validate(self, data):
-        ingredients = data
+        ingredients = data.get('ingredients')
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
@@ -61,7 +61,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'amount': 'Количество не может быть меньше нуля'
                 })
-        tags = data
+        tags = data.get('tags')
         if not tags:
             raise serializers.ValidationError({
                 'tags': 'Не выбран ни один тэг'
