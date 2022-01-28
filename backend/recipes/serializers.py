@@ -47,7 +47,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             user=request.user, recipe=obj).exists()
 
     def validate(self, data):
-        ingredients = data.get('ingredients')
+        ingredients = self.initial_data.get('ingredients')
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
@@ -61,7 +61,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'amount': 'Количество не может быть меньше нуля'
                 })
-        tags = data.get('tags')
+        tags = self.initial_data.get('tags')
         if not tags:
             raise serializers.ValidationError({
                 'tags': 'Не выбран ни один тэг'
@@ -74,7 +74,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 })
             tags_list.append(tag)
 
-        cooking_time = data.get('cooking_time')
+        cooking_time = self.initial_data.get('cooking_time')
         if int(cooking_time) <= 0:
             raise serializers.ValidationError({
                 'cooking_time': 'Время не может быть меньше нуля'
@@ -84,7 +84,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image = validated_data.pop('image')
-        ingredients = validated_data.pop('ingredient')
+        ingredients = self.initial_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
         add_tags(self, recipe)
         add_ingredients(recipe, ingredients)
@@ -93,7 +93,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.tags.clear()
         instance.ingredient.clear()
-        ingredients = validated_data.pop('ingredient')
+        ingredients = self.initial_data.pop('ingredients')
         add_tags(self, instance)
         add_ingredients(instance, ingredients)
         return super().update(instance, validated_data)
