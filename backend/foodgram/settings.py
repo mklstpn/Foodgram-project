@@ -8,7 +8,7 @@ load_dotenv('.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -85,14 +85,14 @@ DJOSER = {
         'token_destroy': ['rest_framework.permissions.IsAuthenticated'],
     }
 }
-# if DEBUG:
-#    DATABASES = {
-#            'default': {
-#                'ENGINE': 'django.db.backends.sqlite3',
-#                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#            },
-#    }
 if DEBUG:
+    DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            },
+    }
+else:
     DATABASES = {
         'default': {
             'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
